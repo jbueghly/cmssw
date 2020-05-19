@@ -111,7 +111,7 @@ void KinZfitter::Setup(std::vector< reco::Candidate* > selectedLeptons, std::map
 
 }
 
-void KinZfitter::Setup(std::vector< TObject* > selectedLeptons, std::map<unsigned int, TLorentzVector> selectedFsrPhotons){
+void KinZfitter::Setup(std::vector< TObject* > selectedLeptons, std::map<unsigned int, TLorentzVector> selectedFsrPhotons, std::vector<double> &errpT){
 
     // reset everything for each event
     idsZ1_.clear(); idsZ2_.clear();      
@@ -123,7 +123,7 @@ void KinZfitter::Setup(std::vector< TObject* > selectedLeptons, std::map<unsigne
     pTerrsZ1_.clear(); pTerrsZ2_.clear(); pTerrsZ1ph_.clear(); pTerrsZ2ph_.clear();
     pTerrsZ1REFIT_.clear(); pTerrsZ2REFIT_.clear(); pTerrsZ1phREFIT_.clear(); pTerrsZ2phREFIT_.clear();
 
-    initZs(selectedLeptons, selectedFsrPhotons);
+    initZs(selectedLeptons, selectedFsrPhotons, errpT);
  
     if(debug_) cout<<"list ids"<<endl;
     //if(debug_) cout<<"IDs[0] "<<idsZ1_[0]<<" IDs[1] "<<idsZ1_[1]<<" IDs[2] "<<idsZ2_[0]<<" IDs[3] "<<idsZ2_[1]<<endl;
@@ -262,7 +262,7 @@ void KinZfitter::initZs(std::vector< reco::Candidate* > selectedLeptons, std::ma
   
 }
 
-void KinZfitter::initZs(std::vector< TObject* > selectedLeptons, std::map<unsigned int, TLorentzVector> selectedFsrPhotons){
+void KinZfitter::initZs(std::vector< TObject* > selectedLeptons, std::map<unsigned int, TLorentzVector> selectedFsrPhotons, std::vector<double> &errpT){
 
     if(debug_) cout<<"init leptons"<<endl;
 
@@ -306,6 +306,8 @@ void KinZfitter::initZs(std::vector< TObject* > selectedLeptons, std::map<unsign
         }
 
     }
+
+    errpT = pTerrsZ1_;
 
     if(debug_) cout<<"init fsr photons"<<endl;
 
