@@ -297,10 +297,11 @@ double HelperFunction::pterr( TObject *o, bool isData){
 
     pterrLep=pterr(gsf, isData);
 
-    double pT_e = gsf->calibPt;
+    //double pT_e = gsf->calibPt;
+    double pT_e = gsf->pt;
     double eta_e = gsf->eta;
    
-    //cout << "gsf isEcalDriven = " << (gsf->typeBits & baconhep::kEcalDriven) << endl;
+    if (debug_) cout << "gsf isEcalDriven = " << (gsf->typeBits & baconhep::kEcalDriven) << endl;
     //if (gsf->ecalDriven()) {
     if (gsf->typeBits & baconhep::kEcalDriven) {
 
@@ -325,7 +326,7 @@ double HelperFunction::pterr( TObject *o, bool isData){
                 }
             } else {pterrLep*=0.74;} // hardcode 4
         } // 1 < |eta| < 2.5      
-    } else {
+    } else { //tracker driven
       
         int xbin = x_elpTaxis_3->FindBin(pT_e);
         int ybin = y_eletaaxis_3->FindBin(fabs(eta_e));
@@ -420,17 +421,18 @@ double HelperFunction::pterr( reco::GsfElectron * elec, bool isData ){
 
 }
 
-double HelperFunction::pterr( TElectron * elec, bool isData ){
+/*double HelperFunction::pterr( TElectron * elec, bool isData ){
 
         if(debug_) cout<<"reco:gsfelectron pt err"<<endl; 
 
-        double perr = 0.;
+        double perr = 0.; */
 
         /*if (elec->ecalDriven()){
            perr = elec->p4Error(reco::GsfElectron::P4_COMBINATION);         
         }*/
         //else{
-
+        //
+/*
                  double ecalEnergy = elec->calibE ;
 
                  if(debug_)cout<<"ecalEnergy "<<ecalEnergy<<endl;
@@ -455,6 +457,45 @@ double HelperFunction::pterr( TElectron * elec, bool isData ){
 
         return pterr;
 
+}*/
+
+double HelperFunction::pterr( TElectron * elec, bool isData ){
+    
+    if(debug_) cout<<"reco:gsfelectron pt err"<<endl; 
+
+    double pterr = 0.;
+
+    double ecalEnergy = elec->calibEcalE;
+
+    if(debug_)cout<<"ecalEnergy "<<ecalEnergy<<endl;
+
+    if (elec->typeBits & baconhep::kEcalDriven) {
+        pterr = elec->calibPtErr;
+    }
+    else { 
+        TLorentzVector gsfP4;
+        gsfP4.SetPtEtaPhiM(elec->pt, elec->eta, elec->phi, 0.000511);
+
+        //double ecalEnergy = elec->calibEcalE;
+
+        //if(debug_)cout<<"ecalEnergy "<<ecalEnergy<<endl;
+
+        double err2 = 0.0;
+        if (fabs(elec->scEta) < 1.479) {
+            err2 += (5.24e-02*5.24e-02)/ecalEnergy;
+            err2 += (2.01e-01*2.01e-01)/(ecalEnergy*ecalEnergy);
+            err2 += 1.00e-02*1.00e-02;
+        } else {
+            err2 += (1.46e-01*1.46e-01)/ecalEnergy;
+            err2 += (9.21e-01*9.21e-01)/(ecalEnergy*ecalEnergy);
+            err2 += 1.94e-03*1.94e-03;
+        }
+        float perr = ecalEnergy * sqrt(err2);
+        pterr = perr*elec->pt/gsfP4.P();
+
+    }
+        
+    return pterr;
 }
 
 double HelperFunction::pterr(TLorentzVector ph){

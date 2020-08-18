@@ -199,6 +199,8 @@ private:
         // True mZ1 shape parameters
         double sgVal_, aVal_, nVal_, fVal_, meanVal_, sigmaVal_, f1Val_;
         double meanCB_, sigmaCB_, alphaCB_, nCB_, meanGauss1_, sigmaGauss1_, f1_, meanGauss2_, sigmaGauss2_, f2_, meanGauss3_, sigmaGauss3_, f3_;
+        //double sgVal_, aVal_, nVal_, meanVal_, bwsigVal_;
+
 
 };
 
