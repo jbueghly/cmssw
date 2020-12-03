@@ -931,238 +931,438 @@ void KinZfitter::SetFitOutput(KinZfitter::FitInput &input, KinZfitter::FitOutput
 }
 
 
+//void KinZfitter::MakeModel(/*RooWorkspace &w,*/ KinZfitter::FitInput &input, KinZfitter::FitOutput &output) {
+//
+//    //lep
+//    RooRealVar pTRECO1_lep("pTRECO1_lep", "pTRECO1_lep", input.pTRECO1_lep, 5, 500);
+//    RooRealVar pTRECO2_lep("pTRECO2_lep", "pTRECO2_lep", input.pTRECO2_lep, 5, 500);
+//    RooRealVar pTMean1_lep("pTMean1_lep", "pTMean1_lep", 
+//                           input.pTRECO1_lep, max(5.0, input.pTRECO1_lep-2*input.pTErr1_lep), input.pTRECO1_lep+2*input.pTErr1_lep);
+//    RooRealVar pTMean2_lep("pTMean2_lep", "pTMean2_lep", 
+//                           input.pTRECO2_lep, max(5.0, input.pTRECO2_lep-2*input.pTErr2_lep), input.pTRECO2_lep+2*input.pTErr2_lep);
+//    RooRealVar pTSigma1_lep("pTSigma1_lep", "pTSigma1_lep", input.pTErr1_lep);
+//    RooRealVar pTSigma2_lep("pTSigma2_lep", "pTSigma2_lep", input.pTErr2_lep);
+//    RooRealVar theta1_lep("theta1_lep", "theta1_lep", input.theta1_lep);
+//    RooRealVar theta2_lep("theta2_lep", "theta2_lep", input.theta2_lep);
+//    RooRealVar phi1_lep("phi1_lep", "phi1_lep", input.phi1_lep);
+//    RooRealVar phi2_lep("phi2_lep", "phi2_lep", input.phi2_lep);
+//    RooRealVar m1("m1", "m1", input.m1);
+//    RooRealVar m2("m2", "m2", input.m2);
+//
+//    //gamma
+//    RooRealVar pTRECO1_gamma("pTRECO1_gamma", "pTRECO1_gamma", input.pTRECO1_gamma, 5, 500);
+//    RooRealVar pTRECO2_gamma("pTRECO2_gamma", "pTRECO2_gamma", input.pTRECO2_gamma, 5, 500);
+//    RooRealVar pTMean1_gamma("pTMean1_gamma", "pTMean1_gamma", 
+//                             input.pTRECO1_gamma, max(0.5, input.pTRECO1_gamma-2*input.pTErr1_gamma), input.pTRECO1_gamma+2*input.pTErr1_gamma);
+//    RooRealVar pTMean2_gamma("pTMean2_gamma", "pTMean2_gamma", 
+//                             input.pTRECO2_gamma, max(0.5, input.pTRECO2_gamma-2*input.pTErr2_gamma), input.pTRECO2_gamma+2*input.pTErr2_gamma);
+//    RooRealVar pTSigma1_gamma("pTSigma1_gamma", "pTSigma1_gamma", input.pTErr1_gamma);
+//    RooRealVar pTSigma2_gamma("pTSigma2_gamma", "pTSigma2_gamma", input.pTErr2_gamma);
+//    RooRealVar theta1_gamma("theta1_gamma", "theta1_gamma", input.theta1_gamma);
+//    RooRealVar theta2_gamma("theta2_gamma", "theta2_gamma", input.theta2_gamma);
+//    RooRealVar phi1_gamma("phi1_gamma", "phi1_gamma", input.phi1_gamma);
+//    RooRealVar phi2_gamma("phi2_gamma", "phi2_gamma", input.phi2_gamma);
+//
+//    //gauss
+//    RooGaussian gauss1_lep("gauss1_lep", "gauss1_lep", pTRECO1_lep, pTMean1_lep, pTSigma1_lep);
+//    RooGaussian gauss2_lep("gauss2_lep", "gauss2_lep", pTRECO2_lep, pTMean2_lep, pTSigma2_lep);
+//    RooGaussian gauss1_gamma("gauss1_gamma", "gauss1_gamma", pTRECO1_gamma, pTMean1_gamma, pTSigma1_gamma);
+//    RooGaussian gauss2_gamma("gauss2_gamma", "gauss2_gamma", pTRECO2_gamma, pTMean2_gamma, pTSigma2_gamma);
+//
+//
+//    TString makeE_lep = "TMath::Sqrt((@0*@0)/((TMath::Sin(@1))*(TMath::Sin(@1)))+@2*@2)";
+//    RooFormulaVar E1_lep("E1_lep", makeE_lep, RooArgList(pTMean1_lep, theta1_lep, m1));  //w.import(E1_lep);
+//    RooFormulaVar E2_lep("E2_lep", makeE_lep, RooArgList(pTMean2_lep, theta2_lep, m2));  //w.import(E2_lep);
+//
+//    TString makeE_gamma = "TMath::Sqrt((@0*@0)/((TMath::Sin(@1))*(TMath::Sin(@1))))";
+//    RooFormulaVar E1_gamma("E1_gamma", makeE_gamma, RooArgList(pTMean1_gamma, theta1_gamma));  //w.import(E1_gamma);
+//    RooFormulaVar E2_gamma("E2_gamma", makeE_gamma, RooArgList(pTMean2_gamma, theta2_gamma));  //w.import(E2_gamma);
+//
+//    //dotProduct 3d
+//    TString dotProduct_3d = "@0*@1*( ((TMath::Cos(@2))*(TMath::Cos(@3)))/((TMath::Sin(@2))*(TMath::Sin(@3)))+(TMath::Cos(@4-@5)))";
+//    RooFormulaVar p1v3D2("p1v3D2", dotProduct_3d, RooArgList(pTMean1_lep, pTMean2_lep, theta1_lep, theta2_lep, phi1_lep, phi2_lep));
+//    RooFormulaVar p1v3Dph1("p1v3Dph1", dotProduct_3d, RooArgList(pTMean1_lep, pTMean1_gamma, theta1_lep, theta1_gamma, phi1_lep, phi1_gamma));
+//    RooFormulaVar p2v3Dph1("p2v3Dph1", dotProduct_3d, RooArgList(pTMean2_lep, pTMean1_gamma, theta2_lep, theta1_gamma, phi2_lep, phi1_gamma));
+//    RooFormulaVar p1v3Dph2("p1v3Dph2", dotProduct_3d, RooArgList(pTMean1_lep, pTMean2_gamma, theta1_lep, theta2_gamma, phi1_lep, phi2_gamma));
+//    RooFormulaVar p2v3Dph2("p2v3Dph2", dotProduct_3d, RooArgList(pTMean2_lep, pTMean2_gamma, theta2_lep, theta2_gamma, phi2_lep, phi2_gamma));
+//    RooFormulaVar ph1v3Dph2("ph1v3Dph2", dotProduct_3d, RooArgList(pTMean1_gamma, pTMean2_gamma, theta1_gamma, theta2_gamma, phi1_gamma, phi2_gamma));
+//
+//    TString dotProduct_4d = "@0*@1-@2";
+//    RooFormulaVar p1D2("p1D2", dotProduct_4d, RooArgList(E1_lep, E2_lep, p1v3D2));  //w.import(p1D2);
+//    RooFormulaVar p1Dph1("p1Dph1", dotProduct_4d, RooArgList(E1_lep, E1_gamma, p1v3Dph1));//  w.import(p1Dph1);
+//    RooFormulaVar p2Dph1("p2Dph1", dotProduct_4d, RooArgList(E2_lep, E1_gamma, p2v3Dph1)); // w.import(p2Dph1);
+//    RooFormulaVar p1Dph2("p1Dph2", dotProduct_4d, RooArgList(E1_lep, E2_gamma, p1v3Dph2));  //w.import(p1Dph2);
+//    RooFormulaVar p2Dph2("p2Dph2", dotProduct_4d, RooArgList(E2_lep, E2_gamma, p2v3Dph2));  //w.import(p2Dph2);
+//    RooFormulaVar ph1Dph2("ph1Dph2", dotProduct_4d, RooArgList(E1_gamma, E2_gamma, ph1v3Dph2)); // w.import(ph1Dph2);
+//
+//    RooFormulaVar* mZ;
+//
+//     //mZ
+//     /*if (input.nFsr == 1) {
+//        mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+2*@1+2*@2+@3*@3+@4*@4)", RooArgList(p1D2, p1Dph1, p2Dph1, m1, m2));
+//        } 
+//     else if (input.nFsr == 2) {
+//        mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+2*@1+2*@2+2*@3+2*@4+2*@5+@6*@6+@7*@7)", RooArgList(p1D2,p1Dph1,p2Dph1,p1Dph2,p2Dph2,ph1Dph2, m1, m2));
+//        }
+//     else {
+//         mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+@1*@1+@2*@2)", RooArgList(p1D2, m1, m2));
+//     }*/
+//    mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+@1*@1+@2*@2)", RooArgList(p1D2, m1, m2));
+//  
+////    RooAbsReal *Z = mZ;
+//      //RooRealVar *Zmass = new RooRealVar("Zmass","",Z->getValV(),0.,200.);
+//    RooRealVar meanCB("meanCB","",meanCB_);
+//      RooRealVar sigmaCB("sigmaCB","",sigmaCB_);
+//      RooRealVar alphaCB("alphaCB","",alphaCB_);
+//      RooRealVar nCB("nCB","",nCB_);
+//      RooRealVar meanGauss1("meanGauss1","",meanGauss1_);
+//      RooRealVar sigmaGauss1("sigmaGauss1","",sigmaGauss1_);
+//      RooRealVar f1("f1","",f1_);
+//      RooRealVar meanGauss2("meanGauss2","",meanGauss2_);
+//      RooRealVar sigmaGauss2("sigmaGauss2","",sigmaGauss2_);
+//      RooRealVar f2("f2","",f2_);
+//      RooRealVar meanGauss3("meanGauss3","",meanGauss3_);
+//      RooRealVar sigmaGauss3("sigmaGauss3","",sigmaGauss3_);
+//      RooRealVar f3("f3","",f3_);
+//
+//      RooCBShape* singleCB = new RooCBShape("singleCB", "", *mZ, meanCB, sigmaCB, alphaCB, nCB);
+//      RooGaussian* gaussShape1 = new RooGaussian("gaussShape1", "", *mZ, meanGauss1, sigmaGauss1);
+//      RooAddPdf* CBplusGauss = new RooAddPdf("CBplusGauss", "", *singleCB, *gaussShape1, f1);
+//      RooGaussian* gaussShape2 = new RooGaussian("gaussShape2", "", *mZ, meanGauss2, sigmaGauss2);
+//      RooAddPdf* CBplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGauss", "", *CBplusGauss, *gaussShape2, f2);
+//      RooGaussian* gaussShape3 = new RooGaussian("gaussShape3", "", *mZ, meanGauss3, sigmaGauss3);
+//      RooAddPdf* CBplusGaussplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGaussplusGauss", "", *CBplusGaussplusGauss, *gaussShape3, f3);
+//
+//      RooProdPdf *model = new RooProdPdf("model","",RooArgList(gauss1_lep, gauss2_lep,*CBplusGaussplusGaussplusGauss));
+//
+//     //true shape
+//     /*RooRealVar meanCB("meanCB","",meanCB_);
+//     RooRealVar sigmaCB("sigmaCB","",sigmaCB_);
+//     RooRealVar alphaCB("alphaCB","",alphaCB_);
+//     RooRealVar nCB("nCB","",nCB_);
+//     RooRealVar meanGauss1("meanGauss1","",meanGauss1_);
+//     RooRealVar sigmaGauss1("sigmaGauss1","",sigmaGauss1_);
+//     RooRealVar f1("f1","",f1_);
+//     RooRealVar meanGauss2("meanGauss2","",meanGauss2_);
+//     RooRealVar sigmaGauss2("sigmaGauss2","",sigmaGauss2_);
+//     RooRealVar f2("f2","",f2_);
+//     RooRealVar meanGauss3("meanGauss3","",meanGauss3_);
+//     RooRealVar sigmaGauss3("sigmaGauss3","",sigmaGauss3_);
+//     RooRealVar f3("f3","",f3_);
+//
+//     RooCBShape* singleCB = new RooCBShape("singleCB", "", *mZ, meanCB, sigmaCB, alphaCB, nCB);
+//     RooGaussian* gaussShape1 = new RooGaussian("gaussShape1", "", *mZ, meanGauss1, sigmaGauss1);
+//     RooAddPdf* CBplusGauss = new RooAddPdf("CBplusGauss", "", *singleCB, *gaussShape1, f1);
+//     RooGaussian* gaussShape2 = new RooGaussian("gaussShape2", "", *mZ, meanGauss2, sigmaGauss2);
+//     RooAddPdf* CBplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGauss", "", *CBplusGauss, *gaussShape2, f2);
+//     RooGaussian* gaussShape3 = new RooGaussian("gaussShape3", "", *mZ, meanGauss3, sigmaGauss3);
+//     RooAddPdf* CBplusGaussplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGaussplusGauss", "", *CBplusGaussplusGauss, *gaussShape3, f3);
+//
+//     RooProdPdf *model = new RooProdPdf("model","",RooArgList(gauss1_lep, gauss2_lep,*CBplusGaussplusGaussplusGauss));*/
+//
+//     /*if (debug_) std::cout << "mZ val = " << mZ->getValV() << std::endl;
+//
+//    RooAbsReal *Z =mZ;
+//     if (debug_) std::cout << "Z val = " << Z->getValV() << std::endl;
+//    RooRealVar *Zmass = new RooRealVar("Zmass","Zmass",Z->getValV(),-1000,10000);
+//     if (debug_) std::cout << "Zmass val = " << Zmass->getValV() << std::endl;
+//    RooRealVar bwMean("bwMean", "m_{Z^{0}}", 91.187);
+//    RooRealVar bwGamma("bwGamma", "#Gamma", bwsigVal_);
+//    RooRealVar sg("sg", "sg", sgVal_);
+//    RooRealVar a("a", "a", aVal_);
+//    RooRealVar n("n", "n", nVal_);
+//    RooRealVar mean("mean","mean",meanVal_);
+//    RooCBShape CB("CB","CB",*mZ,mean,sg,a,n);
+//    //RooGenericPdf RelBW("RelBW","1/( pow(Zmass*Zmass-bwMean*bwMean,2)+pow(Zmass,4)*pow(bwGamma/bwMean,2) )",RooArgSet(*mZ,bwMean,bwGamma) );
+//    RooGenericPdf RelBW("RelBW","1/( pow(Zmass*Zmass-bwMean*bwMean,2)+pow(Zmass,4)*pow(bwGamma/bwMean,2) )",RooArgSet(*Zmass,bwMean,bwGamma) );
+//    //RooFFTConvPdf *RelBWxCB = new RooFFTConvPdf("RelBWxCB","RelBWxCB", *Z, RelBW,CB);
+//    RooFFTConvPdf *RelBWxCB = new RooFFTConvPdf("RelBWxCB","RelBWxCB", *Zmass, RelBW,CB);
+//    RooProdPdf *model = new RooProdPdf("model","",RooArgList(gauss1_lep, gauss2_lep,*RelBWxCB));*/
+//    if (debug_) model->Print();
+//
+//    //make fit
+//    RooArgSet *rastmp;
+//    rastmp = new RooArgSet(pTRECO1_lep, pTRECO2_lep);
+///*
+//    if(input.nFsr == 1) {
+//      rastmp = new RooArgSet(pTRECO1_lep, pTRECO2_lep, pTRECO1_gamma);
+//      }
+//
+//    if(input.nFsr == 2) {
+//      rastmp = new RooArgSet(pTRECO1_lep, pTRECO2_lep, pTRECO1_gamma, pTRECO2_gamma);
+//      }
+//*/
+//    RooDataSet* pTs = new RooDataSet("pTs","pTs", *rastmp);
+//    pTs->add(*rastmp);
+//
+//    RooFitResult* r;
+//    if (mass4lRECO_ > 140) {
+//
+//        //r = PDFRelBW->fitTo(*pTs,RooFit::Save(),RooFit::PrintLevel(-1),RooFit::PrintEvalErrors(-1));
+//        r = model->fitTo(*pTs,RooFit::Save(),RooFit::Constrain(*mZ),RooFit::PrintLevel(-1));
+//
+//       } else {
+//        
+//        //r = PDFRelBWxCBxgauss->fitTo(*pTs,RooFit::Save(),RooFit::PrintLevel(-1),RooFit::PrintEvalErrors(-1));
+//        if (debug_) {
+//            std::cout << "about to fit" << std::endl;
+//        }
+//        //r = model->fitTo(*pTs,RooFit::Save(),RooFit::Constrain(*mZ),RooFit::PrintLevel(-1));
+//        r = model->fitTo(*pTs,RooFit::Save(),RooFit::Constrain(*mZ));
+//        if (debug_) {
+//            std::cout << "did the fit" << std::endl;
+//        }
+//
+//              }
+//    //save fit result
+//    const TMatrixDSym& covMatrix = r->covarianceMatrix();
+//    const RooArgList& finalPars = r->floatParsFinal();
+//
+//    for (int i=0 ; i<finalPars.getSize(); i++){
+// 
+//        TString name = TString(((RooRealVar*)finalPars.at(i))->GetName());
+//        if(debug_) cout<<"name list of RooRealVar for covariance matrix "<<name<<endl;
+//
+//    }
+//
+//    int size = covMatrix.GetNcols();
+//    output.covMatrixZ.ResizeTo(size,size);
+//    output.covMatrixZ = covMatrix;
+//    
+//    output.pT1_lep = pTMean1_lep.getVal();
+//    output.pT2_lep = pTMean2_lep.getVal();
+//    output.pTErr1_lep = pTMean1_lep.getError();
+//    output.pTErr2_lep = pTMean2_lep.getError();
+///*
+//    if (input.nFsr >= 1) {
+//
+//       output.pT1_gamma = pTMean1_gamma.getVal();
+//       output.pTErr1_gamma = pTMean1_gamma.getError();
+//    
+//       }
+//
+//    if (input.nFsr == 2) {
+//
+//       output.pT2_gamma = pTMean2_gamma.getVal();
+//       output.pTErr2_gamma = pTMean2_gamma.getError();
+//
+//       }
+//*/
+//
+//    if (r) delete r;
+//      delete rastmp;
+//      delete pTs;
+//      delete mZ;
+//      delete singleCB;
+//      delete gaussShape1;
+//      delete CBplusGauss;
+//      delete gaussShape2;
+//      delete CBplusGaussplusGauss;
+//      delete gaussShape3;
+//      delete CBplusGaussplusGaussplusGauss;
+//      delete model;
+//    if (debug_) std::cout << "reached end of make model" << std::endl;
+//
+//}
+
+
 void KinZfitter::MakeModel(/*RooWorkspace &w,*/ KinZfitter::FitInput &input, KinZfitter::FitOutput &output) {
 
-    //lep
-    RooRealVar pTRECO1_lep("pTRECO1_lep", "pTRECO1_lep", input.pTRECO1_lep, 5, 500);
-    RooRealVar pTRECO2_lep("pTRECO2_lep", "pTRECO2_lep", input.pTRECO2_lep, 5, 500);
-    RooRealVar pTMean1_lep("pTMean1_lep", "pTMean1_lep", 
-                           input.pTRECO1_lep, max(5.0, input.pTRECO1_lep-2*input.pTErr1_lep), input.pTRECO1_lep+2*input.pTErr1_lep);
-    RooRealVar pTMean2_lep("pTMean2_lep", "pTMean2_lep", 
-                           input.pTRECO2_lep, max(5.0, input.pTRECO2_lep-2*input.pTErr2_lep), input.pTRECO2_lep+2*input.pTErr2_lep);
-    RooRealVar pTSigma1_lep("pTSigma1_lep", "pTSigma1_lep", input.pTErr1_lep);
-    RooRealVar pTSigma2_lep("pTSigma2_lep", "pTSigma2_lep", input.pTErr2_lep);
-    RooRealVar theta1_lep("theta1_lep", "theta1_lep", input.theta1_lep);
-    RooRealVar theta2_lep("theta2_lep", "theta2_lep", input.theta2_lep);
-    RooRealVar phi1_lep("phi1_lep", "phi1_lep", input.phi1_lep);
-    RooRealVar phi2_lep("phi2_lep", "phi2_lep", input.phi2_lep);
-    RooRealVar m1("m1", "m1", input.m1);
-    RooRealVar m2("m2", "m2", input.m2);
+  //lep
+  RooRealVar pTRECO1_lep("pTRECO1_lep", "pTRECO1_lep", input.pTRECO1_lep, 5, 500);
+  RooRealVar pTRECO2_lep("pTRECO2_lep", "pTRECO2_lep", input.pTRECO2_lep, 5, 500);
+  RooRealVar pTMean1_lep("pTMean1_lep", "pTMean1_lep", 
+			 input.pTRECO1_lep, max(5.0, input.pTRECO1_lep-2*input.pTErr1_lep), input.pTRECO1_lep+2*input.pTErr1_lep);
+  RooRealVar pTMean2_lep("pTMean2_lep", "pTMean2_lep", 
+			 input.pTRECO2_lep, max(5.0, input.pTRECO2_lep-2*input.pTErr2_lep), input.pTRECO2_lep+2*input.pTErr2_lep);
+  RooRealVar pTSigma1_lep("pTSigma1_lep", "pTSigma1_lep", input.pTErr1_lep);
+  RooRealVar pTSigma2_lep("pTSigma2_lep", "pTSigma2_lep", input.pTErr2_lep);
+  RooRealVar theta1_lep("theta1_lep", "theta1_lep", input.theta1_lep);
+  RooRealVar theta2_lep("theta2_lep", "theta2_lep", input.theta2_lep);
+  RooRealVar phi1_lep("phi1_lep", "phi1_lep", input.phi1_lep);
+  RooRealVar phi2_lep("phi2_lep", "phi2_lep", input.phi2_lep);
+  RooRealVar m1("m1", "m1", input.m1);
+  RooRealVar m2("m2", "m2", input.m2);
+ //gauss
+  RooGaussian gauss1_lep("gauss1_lep", "gauss1_lep", pTRECO1_lep, pTMean1_lep, pTSigma1_lep);
+  RooGaussian gauss2_lep("gauss2_lep", "gauss2_lep", pTRECO2_lep, pTMean2_lep, pTSigma2_lep);
 
-    //gamma
-    RooRealVar pTRECO1_gamma("pTRECO1_gamma", "pTRECO1_gamma", input.pTRECO1_gamma, 5, 500);
-    RooRealVar pTRECO2_gamma("pTRECO2_gamma", "pTRECO2_gamma", input.pTRECO2_gamma, 5, 500);
-    RooRealVar pTMean1_gamma("pTMean1_gamma", "pTMean1_gamma", 
-                             input.pTRECO1_gamma, max(0.5, input.pTRECO1_gamma-2*input.pTErr1_gamma), input.pTRECO1_gamma+2*input.pTErr1_gamma);
-    RooRealVar pTMean2_gamma("pTMean2_gamma", "pTMean2_gamma", 
-                             input.pTRECO2_gamma, max(0.5, input.pTRECO2_gamma-2*input.pTErr2_gamma), input.pTRECO2_gamma+2*input.pTErr2_gamma);
-    RooRealVar pTSigma1_gamma("pTSigma1_gamma", "pTSigma1_gamma", input.pTErr1_gamma);
-    RooRealVar pTSigma2_gamma("pTSigma2_gamma", "pTSigma2_gamma", input.pTErr2_gamma);
-    RooRealVar theta1_gamma("theta1_gamma", "theta1_gamma", input.theta1_gamma);
-    RooRealVar theta2_gamma("theta2_gamma", "theta2_gamma", input.theta2_gamma);
-    RooRealVar phi1_gamma("phi1_gamma", "phi1_gamma", input.phi1_gamma);
-    RooRealVar phi2_gamma("phi2_gamma", "phi2_gamma", input.phi2_gamma);
-
-    //gauss
-    RooGaussian gauss1_lep("gauss1_lep", "gauss1_lep", pTRECO1_lep, pTMean1_lep, pTSigma1_lep);
-    RooGaussian gauss2_lep("gauss2_lep", "gauss2_lep", pTRECO2_lep, pTMean2_lep, pTSigma2_lep);
-    RooGaussian gauss1_gamma("gauss1_gamma", "gauss1_gamma", pTRECO1_gamma, pTMean1_gamma, pTSigma1_gamma);
-    RooGaussian gauss2_gamma("gauss2_gamma", "gauss2_gamma", pTRECO2_gamma, pTMean2_gamma, pTSigma2_gamma);
-
-
-    TString makeE_lep = "TMath::Sqrt((@0*@0)/((TMath::Sin(@1))*(TMath::Sin(@1)))+@2*@2)";
-    RooFormulaVar E1_lep("E1_lep", makeE_lep, RooArgList(pTMean1_lep, theta1_lep, m1));  //w.import(E1_lep);
-    RooFormulaVar E2_lep("E2_lep", makeE_lep, RooArgList(pTMean2_lep, theta2_lep, m2));  //w.import(E2_lep);
-
-    TString makeE_gamma = "TMath::Sqrt((@0*@0)/((TMath::Sin(@1))*(TMath::Sin(@1))))";
-    RooFormulaVar E1_gamma("E1_gamma", makeE_gamma, RooArgList(pTMean1_gamma, theta1_gamma));  //w.import(E1_gamma);
-    RooFormulaVar E2_gamma("E2_gamma", makeE_gamma, RooArgList(pTMean2_gamma, theta2_gamma));  //w.import(E2_gamma);
-
-    //dotProduct 3d
-    TString dotProduct_3d = "@0*@1*( ((TMath::Cos(@2))*(TMath::Cos(@3)))/((TMath::Sin(@2))*(TMath::Sin(@3)))+(TMath::Cos(@4-@5)))";
-    RooFormulaVar p1v3D2("p1v3D2", dotProduct_3d, RooArgList(pTMean1_lep, pTMean2_lep, theta1_lep, theta2_lep, phi1_lep, phi2_lep));
-    RooFormulaVar p1v3Dph1("p1v3Dph1", dotProduct_3d, RooArgList(pTMean1_lep, pTMean1_gamma, theta1_lep, theta1_gamma, phi1_lep, phi1_gamma));
-    RooFormulaVar p2v3Dph1("p2v3Dph1", dotProduct_3d, RooArgList(pTMean2_lep, pTMean1_gamma, theta2_lep, theta1_gamma, phi2_lep, phi1_gamma));
-    RooFormulaVar p1v3Dph2("p1v3Dph2", dotProduct_3d, RooArgList(pTMean1_lep, pTMean2_gamma, theta1_lep, theta2_gamma, phi1_lep, phi2_gamma));
-    RooFormulaVar p2v3Dph2("p2v3Dph2", dotProduct_3d, RooArgList(pTMean2_lep, pTMean2_gamma, theta2_lep, theta2_gamma, phi2_lep, phi2_gamma));
-    RooFormulaVar ph1v3Dph2("ph1v3Dph2", dotProduct_3d, RooArgList(pTMean1_gamma, pTMean2_gamma, theta1_gamma, theta2_gamma, phi1_gamma, phi2_gamma));
-
-    TString dotProduct_4d = "@0*@1-@2";
-    RooFormulaVar p1D2("p1D2", dotProduct_4d, RooArgList(E1_lep, E2_lep, p1v3D2));  //w.import(p1D2);
-    RooFormulaVar p1Dph1("p1Dph1", dotProduct_4d, RooArgList(E1_lep, E1_gamma, p1v3Dph1));//  w.import(p1Dph1);
-    RooFormulaVar p2Dph1("p2Dph1", dotProduct_4d, RooArgList(E2_lep, E1_gamma, p2v3Dph1)); // w.import(p2Dph1);
-    RooFormulaVar p1Dph2("p1Dph2", dotProduct_4d, RooArgList(E1_lep, E2_gamma, p1v3Dph2));  //w.import(p1Dph2);
-    RooFormulaVar p2Dph2("p2Dph2", dotProduct_4d, RooArgList(E2_lep, E2_gamma, p2v3Dph2));  //w.import(p2Dph2);
-    RooFormulaVar ph1Dph2("ph1Dph2", dotProduct_4d, RooArgList(E1_gamma, E2_gamma, ph1v3Dph2)); // w.import(ph1Dph2);
-
-    RooFormulaVar* mZ;
-
-     //mZ
-     /*if (input.nFsr == 1) {
-        mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+2*@1+2*@2+@3*@3+@4*@4)", RooArgList(p1D2, p1Dph1, p2Dph1, m1, m2));
-        } 
-     else if (input.nFsr == 2) {
-        mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+2*@1+2*@2+2*@3+2*@4+2*@5+@6*@6+@7*@7)", RooArgList(p1D2,p1Dph1,p2Dph1,p1Dph2,p2Dph2,ph1Dph2, m1, m2));
-        }
-     else {
-         mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+@1*@1+@2*@2)", RooArgList(p1D2, m1, m2));
-     }*/
-    mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+@1*@1+@2*@2)", RooArgList(p1D2, m1, m2));
+  TString makeE_lep = "TMath::Sqrt((@0*@0)/((TMath::Sin(@1))*(TMath::Sin(@1)))+@2*@2)";
+  RooFormulaVar E1_lep("E1_lep", makeE_lep, RooArgList(pTMean1_lep, theta1_lep, m1));  //w.import(E1_lep);
+  RooFormulaVar E2_lep("E2_lep", makeE_lep, RooArgList(pTMean2_lep, theta2_lep, m2));  //w.import(E2_lep);
+  //dotProduct 3d
+  TString dotProduct_3d = "@0*@1*( ((TMath::Cos(@2))*(TMath::Cos(@3)))/((TMath::Sin(@2))*(TMath::Sin(@3)))+(TMath::Cos(@4-@5)))";
+  RooFormulaVar p1v3D2("p1v3D2", dotProduct_3d, RooArgList(pTMean1_lep, pTMean2_lep, theta1_lep, theta2_lep, phi1_lep, phi2_lep));
+  TString dotProduct_4d = "@0*@1-@2";
+  RooFormulaVar p1D2("p1D2", dotProduct_4d, RooArgList(E1_lep, E2_lep, p1v3D2));  //w.import(p1D2);
   
-//    RooAbsReal *Z = mZ;
-      //RooRealVar *Zmass = new RooRealVar("Zmass","",Z->getValV(),0.,200.);
-    RooRealVar meanCB("meanCB","",meanCB_);
-      RooRealVar sigmaCB("sigmaCB","",sigmaCB_);
-      RooRealVar alphaCB("alphaCB","",alphaCB_);
-      RooRealVar nCB("nCB","",nCB_);
-      RooRealVar meanGauss1("meanGauss1","",meanGauss1_);
-      RooRealVar sigmaGauss1("sigmaGauss1","",sigmaGauss1_);
-      RooRealVar f1("f1","",f1_);
-      RooRealVar meanGauss2("meanGauss2","",meanGauss2_);
-      RooRealVar sigmaGauss2("sigmaGauss2","",sigmaGauss2_);
-      RooRealVar f2("f2","",f2_);
-      RooRealVar meanGauss3("meanGauss3","",meanGauss3_);
-      RooRealVar sigmaGauss3("sigmaGauss3","",sigmaGauss3_);
-      RooRealVar f3("f3","",f3_);
+  //gamma ---treat seperately, if no photon--> don't use it
+  /*TString makeE_gamma = "TMath::Sqrt((@0*@0)/((TMath::Sin(@1))*(TMath::Sin(@1))))";
+  if(input.pTErr1_gamma==0.)input.pTErr1_gamma = 0.001;
+  if(input.pTErr2_gamma==0.)input.pTErr2_gamma = 0.001;
 
-      RooCBShape* singleCB = new RooCBShape("singleCB", "", *mZ, meanCB, sigmaCB, alphaCB, nCB);
-      RooGaussian* gaussShape1 = new RooGaussian("gaussShape1", "", *mZ, meanGauss1, sigmaGauss1);
-      RooAddPdf* CBplusGauss = new RooAddPdf("CBplusGauss", "", *singleCB, *gaussShape1, f1);
-      RooGaussian* gaussShape2 = new RooGaussian("gaussShape2", "", *mZ, meanGauss2, sigmaGauss2);
-      RooAddPdf* CBplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGauss", "", *CBplusGauss, *gaussShape2, f2);
-      RooGaussian* gaussShape3 = new RooGaussian("gaussShape3", "", *mZ, meanGauss3, sigmaGauss3);
-      RooAddPdf* CBplusGaussplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGaussplusGauss", "", *CBplusGaussplusGauss, *gaussShape3, f3);
+	RooRealVar pTRECO1_gamma("pTRECO1_gamma", "pTRECO1_gamma", input.pTRECO1_gamma, 5, 500);
+	RooRealVar pTMean1_gamma("pTMean1_gamma", "pTMean1_gamma", 
+	input.pTRECO1_gamma, max(0.5, input.pTRECO1_gamma-2*input.pTErr1_gamma), max(0.5+0.001,input.pTRECO1_gamma+2*input.pTErr1_gamma)); 
+	RooRealVar pTSigma1_gamma("pTSigma1_gamma", "pTSigma1_gamma", input.pTErr1_gamma);
+	RooRealVar theta1_gamma("theta1_gamma", "theta1_gamma", input.theta1_gamma);
+	RooRealVar phi1_gamma("phi1_gamma", "phi1_gamma", input.phi1_gamma);
+	RooGaussian gauss1_gamma("gauss1_gamma", "gauss1_gamma", pTRECO1_gamma, pTMean1_gamma, pTSigma1_gamma);
+	RooFormulaVar E1_gamma("E1_gamma", makeE_gamma, RooArgList(pTMean1_gamma, theta1_gamma));  //w.import(E1_gamma);
+	RooFormulaVar p1v3Dph1("p1v3Dph1", dotProduct_3d, RooArgList(pTMean1_lep, pTMean1_gamma, theta1_lep, theta1_gamma, phi1_lep, phi1_gamma));
+	RooFormulaVar p2v3Dph1("p2v3Dph1", dotProduct_3d, RooArgList(pTMean2_lep, pTMean1_gamma, theta2_lep, theta1_gamma, phi2_lep, phi1_gamma));
+	RooFormulaVar p1Dph1("p1Dph1", dotProduct_4d, RooArgList(E1_lep, E1_gamma, p1v3Dph1));//  w.import(p1Dph1);
+	RooFormulaVar p2Dph1("p2Dph1", dotProduct_4d, RooArgList(E2_lep, E1_gamma, p2v3Dph1)); // w.import(p2Dph1);
+	RooRealVar pTRECO2_gamma("pTRECO2_gamma", "pTRECO2_gamma", input.pTRECO2_gamma, 5, 500);
+	RooRealVar pTMean2_gamma("pTMean2_gamma", "pTMean2_gamma", 
+	input.pTRECO2_gamma, max(0.5, input.pTRECO2_gamma-2*input.pTErr2_gamma), max(0.5+0.001,input.pTRECO2_gamma+2*input.pTErr2_gamma)); 
+	RooRealVar pTSigma2_gamma("pTSigma2_gamma", "pTSigma2_gamma", input.pTErr2_gamma);
+	RooRealVar theta2_gamma("theta2_gamma", "theta2_gamma", input.theta2_gamma);
+	RooRealVar phi2_gamma("phi2_gamma", "phi2_gamma", input.phi2_gamma);
+	RooGaussian gauss2_gamma("gauss2_gamma", "gauss2_gamma", pTRECO2_gamma, pTMean2_gamma, pTSigma2_gamma);
+	RooFormulaVar E2_gamma("E2_gamma", makeE_gamma, RooArgList(pTMean2_gamma, theta2_gamma));  //w.import(E2_gamma);
+	RooFormulaVar p1v3Dph2("p1v3Dph2", dotProduct_3d, RooArgList(pTMean1_lep, pTMean2_gamma, theta1_lep, theta2_gamma, phi1_lep, phi2_gamma));
+	RooFormulaVar p2v3Dph2("p2v3Dph2", dotProduct_3d, RooArgList(pTMean2_lep, pTMean2_gamma, theta2_lep, theta2_gamma, phi2_lep, phi2_gamma));
+	RooFormulaVar p1Dph2("p1Dph2", dotProduct_4d, RooArgList(E1_lep, E2_gamma, p1v3Dph2));  //w.import(p1Dph2);
+	RooFormulaVar p2Dph2("p2Dph2", dotProduct_4d, RooArgList(E2_lep, E2_gamma, p2v3Dph2));  //w.import(p2Dph2);
+	RooFormulaVar ph1v3Dph2("ph1v3Dph2", dotProduct_3d, RooArgList(pTMean1_gamma, pTMean2_gamma, theta1_gamma, theta2_gamma, phi1_gamma, phi2_gamma));
+	RooFormulaVar ph1Dph2("ph1Dph2", dotProduct_4d, RooArgList(E1_gamma, E2_gamma, ph1v3Dph2)); // w.import(ph1Dph2);
+  */
 
-      RooProdPdf *model = new RooProdPdf("model","",RooArgList(gauss1_lep, gauss2_lep,*CBplusGaussplusGaussplusGauss));
+  RooFormulaVar* mZ;
 
-     //true shape
-     /*RooRealVar meanCB("meanCB","",meanCB_);
-     RooRealVar sigmaCB("sigmaCB","",sigmaCB_);
-     RooRealVar alphaCB("alphaCB","",alphaCB_);
-     RooRealVar nCB("nCB","",nCB_);
-     RooRealVar meanGauss1("meanGauss1","",meanGauss1_);
-     RooRealVar sigmaGauss1("sigmaGauss1","",sigmaGauss1_);
-     RooRealVar f1("f1","",f1_);
-     RooRealVar meanGauss2("meanGauss2","",meanGauss2_);
-     RooRealVar sigmaGauss2("sigmaGauss2","",sigmaGauss2_);
-     RooRealVar f2("f2","",f2_);
-     RooRealVar meanGauss3("meanGauss3","",meanGauss3_);
-     RooRealVar sigmaGauss3("sigmaGauss3","",sigmaGauss3_);
-     RooRealVar f3("f3","",f3_);
+  //mZ
+  /*if (input.nFsr == 1) {
+    mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+2*@1+2*@2+@3*@3+@4*@4)", RooArgList(p1D2, p1Dph1, p2Dph1, m1, m2));
+    } 
+    else if (input.nFsr == 2) {
+    mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+2*@1+2*@2+2*@3+2*@4+2*@5+@6*@6+@7*@7)", RooArgList(p1D2,p1Dph1,p2Dph1,p1Dph2,p2Dph2,ph1Dph2, m1, m2));
+    }
+    else {*/
+  mZ = new RooFormulaVar("mZ", "TMath::Sqrt(2*@0+@1*@1+@2*@2)", RooArgList(p1D2, m1, m2));
+  //}
+  
+  RooAbsReal *Z = mZ;
+  RooRealVar *Zmass = new RooRealVar("Zmass","",Z->getValV(),0.,200.);
+RooRealVar meanCB("meanCB","",meanCB_);
+  RooRealVar sigmaCB("sigmaCB","",sigmaCB_);
+  RooRealVar alphaCB("alphaCB","",alphaCB_);
+  RooRealVar nCB("nCB","",nCB_);
+  RooRealVar meanGauss1("meanGauss1","",meanGauss1_);
+  RooRealVar sigmaGauss1("sigmaGauss1","",sigmaGauss1_);
+  RooRealVar f1("f1","",f1_);
+  RooRealVar meanGauss2("meanGauss2","",meanGauss2_);
+  RooRealVar sigmaGauss2("sigmaGauss2","",sigmaGauss2_);
+  RooRealVar f2("f2","",f2_);
+  RooRealVar meanGauss3("meanGauss3","",meanGauss3_);
+  RooRealVar sigmaGauss3("sigmaGauss3","",sigmaGauss3_);
+  RooRealVar f3("f3","",f3_);
 
-     RooCBShape* singleCB = new RooCBShape("singleCB", "", *mZ, meanCB, sigmaCB, alphaCB, nCB);
-     RooGaussian* gaussShape1 = new RooGaussian("gaussShape1", "", *mZ, meanGauss1, sigmaGauss1);
-     RooAddPdf* CBplusGauss = new RooAddPdf("CBplusGauss", "", *singleCB, *gaussShape1, f1);
-     RooGaussian* gaussShape2 = new RooGaussian("gaussShape2", "", *mZ, meanGauss2, sigmaGauss2);
-     RooAddPdf* CBplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGauss", "", *CBplusGauss, *gaussShape2, f2);
-     RooGaussian* gaussShape3 = new RooGaussian("gaussShape3", "", *mZ, meanGauss3, sigmaGauss3);
-     RooAddPdf* CBplusGaussplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGaussplusGauss", "", *CBplusGaussplusGauss, *gaussShape3, f3);
+  RooCBShape* singleCB = new RooCBShape("singleCB", "", *mZ, meanCB, sigmaCB, alphaCB, nCB);
+  RooGaussian* gaussShape1 = new RooGaussian("gaussShape1", "", *mZ, meanGauss1, sigmaGauss1);
+  RooAddPdf* CBplusGauss = new RooAddPdf("CBplusGauss", "", *singleCB, *gaussShape1, f1);
+  RooGaussian* gaussShape2 = new RooGaussian("gaussShape2", "", *mZ, meanGauss2, sigmaGauss2);
+  RooAddPdf* CBplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGauss", "", *CBplusGauss, *gaussShape2, f2);
+  RooGaussian* gaussShape3 = new RooGaussian("gaussShape3", "", *mZ, meanGauss3, sigmaGauss3);
+  RooAddPdf* CBplusGaussplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGaussplusGauss", "", *CBplusGaussplusGauss, *gaussShape3, f3);
 
-     RooProdPdf *model = new RooProdPdf("model","",RooArgList(gauss1_lep, gauss2_lep,*CBplusGaussplusGaussplusGauss));*/
+  RooProdPdf *model = new RooProdPdf("model","",RooArgList(gauss1_lep, gauss2_lep,*CBplusGaussplusGaussplusGauss));
 
-     /*if (debug_) std::cout << "mZ val = " << mZ->getValV() << std::endl;
+  //true shape
+  /*RooRealVar meanCB("meanCB","",meanCB_);
+  RooRealVar sigmaCB("sigmaCB","",sigmaCB_);
+  RooRealVar alphaCB("alphaCB","",alphaCB_);
+  RooRealVar nCB("nCB","",nCB_);
+  RooRealVar meanGauss1("meanGauss1","",meanGauss1_);
+  RooRealVar sigmaGauss1("sigmaGauss1","",sigmaGauss1_);
+  RooRealVar f1("f1","",f1_);
+  RooRealVar meanGauss2("meanGauss2","",meanGauss2_);
+  RooRealVar sigmaGauss2("sigmaGauss2","",sigmaGauss2_);
+  RooRealVar f2("f2","",f2_);
+  RooRealVar meanGauss3("meanGauss3","",meanGauss3_);
+  RooRealVar sigmaGauss3("sigmaGauss3","",sigmaGauss3_);
+  RooRealVar f3("f3","",f3_);
 
-    RooAbsReal *Z =mZ;
-     if (debug_) std::cout << "Z val = " << Z->getValV() << std::endl;
-    RooRealVar *Zmass = new RooRealVar("Zmass","Zmass",Z->getValV(),-1000,10000);
-     if (debug_) std::cout << "Zmass val = " << Zmass->getValV() << std::endl;
-    RooRealVar bwMean("bwMean", "m_{Z^{0}}", 91.187);
-    RooRealVar bwGamma("bwGamma", "#Gamma", bwsigVal_);
-    RooRealVar sg("sg", "sg", sgVal_);
-    RooRealVar a("a", "a", aVal_);
-    RooRealVar n("n", "n", nVal_);
-    RooRealVar mean("mean","mean",meanVal_);
-    RooCBShape CB("CB","CB",*mZ,mean,sg,a,n);
-    //RooGenericPdf RelBW("RelBW","1/( pow(Zmass*Zmass-bwMean*bwMean,2)+pow(Zmass,4)*pow(bwGamma/bwMean,2) )",RooArgSet(*mZ,bwMean,bwGamma) );
-    RooGenericPdf RelBW("RelBW","1/( pow(Zmass*Zmass-bwMean*bwMean,2)+pow(Zmass,4)*pow(bwGamma/bwMean,2) )",RooArgSet(*Zmass,bwMean,bwGamma) );
-    //RooFFTConvPdf *RelBWxCB = new RooFFTConvPdf("RelBWxCB","RelBWxCB", *Z, RelBW,CB);
-    RooFFTConvPdf *RelBWxCB = new RooFFTConvPdf("RelBWxCB","RelBWxCB", *Zmass, RelBW,CB);
-    RooProdPdf *model = new RooProdPdf("model","",RooArgList(gauss1_lep, gauss2_lep,*RelBWxCB));*/
-    if (debug_) model->Print();
+  RooCBShape* singleCB = new RooCBShape("singleCB", "", *mZ, meanCB, sigmaCB, alphaCB, nCB);
+  RooGaussian* gaussShape1 = new RooGaussian("gaussShape1", "", *mZ, meanGauss1, sigmaGauss1);
+  RooAddPdf* CBplusGauss = new RooAddPdf("CBplusGauss", "", *singleCB, *gaussShape1, f1);
+  RooGaussian* gaussShape2 = new RooGaussian("gaussShape2", "", *mZ, meanGauss2, sigmaGauss2);
+  RooAddPdf* CBplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGauss", "", *CBplusGauss, *gaussShape2, f2);
+  RooGaussian* gaussShape3 = new RooGaussian("gaussShape3", "", *mZ, meanGauss3, sigmaGauss3);
+  RooAddPdf* CBplusGaussplusGaussplusGauss = new RooAddPdf("CBplusGaussplusGaussplusGauss", "", *CBplusGaussplusGauss, *gaussShape3, f3);
 
-    //make fit
-    RooArgSet *rastmp;
-    rastmp = new RooArgSet(pTRECO1_lep, pTRECO2_lep);
-/*
-    if(input.nFsr == 1) {
-      rastmp = new RooArgSet(pTRECO1_lep, pTRECO2_lep, pTRECO1_gamma);
-      }
+  RooProdPdf *model = new RooProdPdf("model","",RooArgList(gauss1_lep, gauss2_lep,*CBplusGaussplusGaussplusGauss));
 
-    if(input.nFsr == 2) {
-      rastmp = new RooArgSet(pTRECO1_lep, pTRECO2_lep, pTRECO1_gamma, pTRECO2_gamma);
-      }
-*/
-    RooDataSet* pTs = new RooDataSet("pTs","pTs", *rastmp);
-    pTs->add(*rastmp);
-
-    RooFitResult* r;
-    if (mass4lRECO_ > 140) {
-
-        //r = PDFRelBW->fitTo(*pTs,RooFit::Save(),RooFit::PrintLevel(-1),RooFit::PrintEvalErrors(-1));
-        r = model->fitTo(*pTs,RooFit::Save(),RooFit::Constrain(*mZ),RooFit::PrintLevel(-1));
-
-       } else {
-        
-        //r = PDFRelBWxCBxgauss->fitTo(*pTs,RooFit::Save(),RooFit::PrintLevel(-1),RooFit::PrintEvalErrors(-1));
-        if (debug_) {
-            std::cout << "about to fit" << std::endl;
-        }
-        //r = model->fitTo(*pTs,RooFit::Save(),RooFit::Constrain(*mZ),RooFit::PrintLevel(-1));
-        r = model->fitTo(*pTs,RooFit::Save(),RooFit::Constrain(*mZ));
-        if (debug_) {
-            std::cout << "did the fit" << std::endl;
-        }
-
-              }
-    //save fit result
-    const TMatrixDSym& covMatrix = r->covarianceMatrix();
-    const RooArgList& finalPars = r->floatParsFinal();
-
-    for (int i=0 ; i<finalPars.getSize(); i++){
- 
-        TString name = TString(((RooRealVar*)finalPars.at(i))->GetName());
-        if(debug_) cout<<"name list of RooRealVar for covariance matrix "<<name<<endl;
-
+  */
+  //make fit
+  RooArgSet *rastmp;
+  rastmp = new RooArgSet(pTRECO1_lep, pTRECO2_lep);
+  
+  /*if(input.nFsr == 1) {
+    rastmp = new RooArgSet(pTRECO1_lep, pTRECO2_lep, pTRECO1_gamma);
     }
 
-    int size = covMatrix.GetNcols();
-    output.covMatrixZ.ResizeTo(size,size);
-    output.covMatrixZ = covMatrix;
-    
-    output.pT1_lep = pTMean1_lep.getVal();
-    output.pT2_lep = pTMean2_lep.getVal();
-    output.pTErr1_lep = pTMean1_lep.getError();
-    output.pTErr2_lep = pTMean2_lep.getError();
-/*
-    if (input.nFsr >= 1) {
+    if(input.nFsr == 2) {
+    rastmp = new RooArgSet(pTRECO1_lep, pTRECO2_lep, pTRECO1_gamma, pTRECO2_gamma);
+    }*/
+  RooDataSet* pTs = new RooDataSet("pTs","pTs", *rastmp);
+  pTs->add(*rastmp);
+  //RooRealVar *plotmZ = (RooRealVar*)pTs->addColumn(*mZ);
+  //RooPlot *xframe = plotmZ->frame(50,120);
+   //model->plotOn(xframe,RooFit::Name("model"),LineColor(kBlue));
+  //CBplusGaussplusGaussplusGauss->plotOn(xframe,RooFit::Name("CBplusGaussplusGaussplusGauss"));//,LineStyle(kDashed),LineColor(kRed));
+  //xframe->Draw(); 
+  //gPad->Print("old.pdf");
+  RooFitResult* r;
+  RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
+  RooMsgService::instance().setGlobalKillBelow(RooFit::FATAL);
+  RooMsgService::instance().setSilentMode(true);
 
-       output.pT1_gamma = pTMean1_gamma.getVal();
-       output.pTErr1_gamma = pTMean1_gamma.getError();
-    
-       }
+    r = model->fitTo(*pTs,RooFit::Save(),RooFit::Constrain(*mZ),RooFit::PrintLevel(-1));
+  //r = model->fitTo(*pTs,RooFit::Save(),RooFit::Constrain(*Z),RooFit::PrintLevel(-1));
 
-    if (input.nFsr == 2) {
+  //save fit result
+  const TMatrixDSym& covMatrix = r->covarianceMatrix();
+  const RooArgList& finalPars = r->floatParsFinal();
 
-       output.pT2_gamma = pTMean2_gamma.getVal();
-       output.pTErr2_gamma = pTMean2_gamma.getError();
+  for (int i=0 ; i<finalPars.getSize(); i++){
+ 
+    TString name = TString(((RooRealVar*)finalPars.at(i))->GetName());
+    if(debug_) cout<<"name list of RooRealVar for covariance matrix "<<name<<endl;
 
-       }
-*/
+  }
 
-    if (r) delete r;
-      delete rastmp;
-      delete pTs;
-      delete mZ;
-      delete singleCB;
-      delete gaussShape1;
-      delete CBplusGauss;
-      delete gaussShape2;
-      delete CBplusGaussplusGauss;
-      delete gaussShape3;
-      delete CBplusGaussplusGaussplusGauss;
-      delete model;
-    if (debug_) std::cout << "reached end of make model" << std::endl;
+  int size = covMatrix.GetNcols();
+  output.covMatrixZ.ResizeTo(size,size);
+  output.covMatrixZ = covMatrix;
+  output.pT1_lep = pTMean1_lep.getVal();
+  output.pT2_lep = pTMean2_lep.getVal();
+  output.pTErr1_lep = pTMean1_lep.getError();
+  output.pTErr2_lep = pTMean2_lep.getError();
+  /*if (input.nFsr >= 1) 
+	{
+		output.pT1_gamma = pTMean1_gamma.getVal();
+		output.pTErr1_gamma = pTMean1_gamma.getError();
+    }
 
+    if (input.nFsr == 2) 
+	{
+		output.pT2_gamma = pTMean2_gamma.getVal();
+		output.pTErr2_gamma = pTMean2_gamma.getError();
+    }
+  */
+  if (r) delete r;
+  delete rastmp;
+  delete pTs;
+  delete mZ;
+  delete singleCB;
+  delete gaussShape1;
+  delete CBplusGauss;
+  delete gaussShape2;
+  delete CBplusGaussplusGauss;
+  delete gaussShape3;
+  delete CBplusGaussplusGaussplusGauss;
+  delete model;
 }
 
 bool KinZfitter::IsFourEFourMu(vector<int> &Z1id, vector<int> &Z2id) {
